@@ -111,8 +111,10 @@ class classFig:
             kwargs['cmap'] = 'nipy_spectral'
         self.axeC.pcolormesh(*args,**kwargs)
     def axis(self,*args,**kwargs):
+        """ Access axis properties such as 'off' """
         self.axeC.axis(*args,**kwargs)
     def axis_aspect(self,*args,**kwargs):
+        """ Access axis aspect ration """
         self.axeC.set_aspect(*args,**kwargs)
     def title(self,*args,**kwargs):
         """ Set title for current axis """
