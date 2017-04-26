@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from cycler import cycler
+from cycler import cycler # pip install cycler
         
 class classFig:
     """
@@ -15,7 +15,7 @@ class classFig:
         self.figshow = figshow # show figure after saving
         self.subplot_geo = subplot # subplot geometry, first value Y-axis (above), second value X-axis (besides)
         self.subplot_cnt = subplot[0]*subplot[1] # number of subplots
-        self.axeC = 0 # current axis
+        self.axe_current = 0 # current axis
         
         # color
         colorBlue    = np.array([33,101,146])/255 #iap color "blue"
@@ -77,70 +77,68 @@ class classFig:
         
         self.figH.set_size_inches(width/2.54,height/2.54)
         
-    def axis_current(self):
-        """ Returns the axis handle for the current axis """
-        self.axeC = self.axeC % ( self.subplot_geo[0] * self.subplot_geo[1] )
-        if self.subplot_geo == (1,1):
-            return self.axeH
-        elif self.subplot_geo[0] > 1 and self.subplot_geo[1] > 1:
-            isuby = self.axeC // self.subplot_geo[1]
-            isubx = self.axeC % self.subplot_geo[1]
-            return self.axeH[isuby][isubx]
-        else:
-            return self.axeH[self.axeC]
+        self.subplot(0)
             
     def subplot(self,iplot=np.NaN):
-        """ Set current subplot: fig.subplot(0) for first subplot or fig.subplot() for next subplot """
+        """ Set current axis/subplot: fig.subplot(0) for first subplot or fig.subplot() for next subplot """
         if iplot is np.NaN:
-            self.axeC += 1
+            self.axe_current += 1
         else:
-            self.axeC = iplot
-        self.axeC = self.axeC % ( self.subplot_geo[0] * self.subplot_geo[1] )
+            self.axe_current = iplot
+        
+        self.axe_current = self.axe_current % ( self.subplot_geo[0] * self.subplot_geo[1] )
+        if self.subplot_geo == (1,1):
+            self.axeC = self.axeH
+        elif self.subplot_geo[0] > 1 and self.subplot_geo[1] > 1:
+            isuby = self.axe_current // self.subplot_geo[1]
+            isubx = self.axe_current % self.subplot_geo[1]
+            self.axeC = self.axeH[isuby][isubx]
+        else:
+            self.axeC = self.axeH[self.axe_current]
+        
+        return self.axeC
     
     def suptitle(self,*args,**kwargs):
         """ Set super title for the whole figure """
         self.figH.suptitle(*args,**kwargs)
     def plot(self,*args,**kwargs):
         """ Plot data """
-        axeC = self.axis_current()
-        axeC.plot(*args,**kwargs)
+        self.axeC.plot(*args,**kwargs)
 #        axeC.set_xlim(np.min(x),np.max(x))
     def pcolor(self,*args,**kwargs):
         """ 2D area plot """
-        axeC = self.axis_current()
         if 'cmap' not in kwargs:
             kwargs['cmap'] = 'nipy_spectral'
-        axeC.pcolormesh(*args,**kwargs)
+        self.axeC.pcolormesh(*args,**kwargs)
+    def axis(self,*args,**kwargs):
+        self.axeC.axis(*args,**kwargs)
+    def axis_aspect(self,*args,**kwargs):
+        self.axeC.set_aspect(*args,**kwargs)
     def title(self,*args,**kwargs):
         """ Set title for current axis """
-        axeC = self.axis_current()
-        axeC.set_title(*args,**kwargs)
+        self.axeC.set_title(*args,**kwargs)
     def xlabel(self,*args,**kwargs):
         """ Set xlabel for current axis """
-        axeC = self.axis_current()
-        axeC.set_xlabel(*args,**kwargs)
+        self.axeC.set_xlabel(*args,**kwargs)
     def ylabel(self,*args,**kwargs):
         """ Set ylabel for current axis """
-        axeC = self.axis_current()
-        axeC.set_ylabel(*args,**kwargs)
+        self.axeC.set_ylabel(*args,**kwargs)
     def xlim(self,xmin=np.inf,xmax=-np.inf):
         """ Set limits for current x-axis: fig.xlim(0,1) or fig.xlim() """
-        axeC = self.axis_current()
         if xmin==np.inf and xmax==-np.inf:
-            for iline in axeC.lines:
+            for iline in self.axeC.lines:
                 x = iline.get_xdata()
                 xmin = np.minimum(xmin,np.min(x))
                 xmax = np.maximum(xmax,np.max(x))
-        axeC.set_xlim(xmin,xmax)
+        self.axeC.set_xlim(xmin,xmax)
     def ylim(self,ymin=np.inf,ymax=-np.inf):
         """ Set limits for current y-axis: fig.ylim(0,1) or fig.ylim() """
-        axeC = self.axis_current()
         if ymin==np.inf and ymax==-np.inf:
-            for iline in axeC.lines:
+            for iline in self.axeC.lines:
                 y = iline.get_ydata()
                 ymin = np.minimum(ymin,np.min(y))
                 ymax = np.maximum(ymax,np.max(y))
-        axeC.set_ylim(ymin,ymax)
+        self.axeC.set_ylim(ymin,ymax)
     def save(self,filename,*args,**kwargs):
         """ Save figure to png, pdf: fig.save('test.png',600,'pdf') """
         dpi = 300
@@ -155,6 +153,7 @@ class classFig:
                 fileformat.add(attribute)
          
         self.figH.tight_layout()
+        #fig.subplots_adjust(hspace=0.1)
         if 'dpi' not in kwargs:
             kwargs['dpi'] = dpi
         for iformat in fileformat:            
