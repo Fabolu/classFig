@@ -165,13 +165,14 @@ class classFig:
             
 if __name__ == '__main__':
     fig = classFig('oe',(3,2))
-    fig.subplot()
-    fig.plot(np.linspace(0,2,10),np.random.rand(10,3))
-    fig.xlim()
-    fig.title('Random numbers')
-    fig.xlabel('Test')
-    fig.subplot(4)
-    fig.pcolor(np.random.rand(10,10))
-    fig.ylabel('Numbers')
-    fig.save('fig_test.png',600,'pdf')
+    fig.plot(np.linspace(0,2,10),np.random.rand(10,3)) # plot some data
+    fig.subplot() # next subplot
+    fig.plot(np.linspace(0,2,10),np.random.rand(10,4))
+    fig.xlim() # set limits to min/max values
+    fig.title('Random numbers') # set title for current axis
+    fig.xlabel('Test')  # set xlabel
+    fig.subplot(4) # activate specific subplot
+    fig.pcolor(np.random.rand(10,10)) # 2D data plot (uses much fast pcolormesh internally)
+    fig.axeC.set_ylabel('Numbers') # all matplotlib functions can be called directly for the current axis
+    fig.save('fig_test.png',600,'pdf') # save figure in multiple format with specified resolution
     
