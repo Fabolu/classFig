@@ -97,30 +97,32 @@ class classFig:
             self.axeC = iplot
         self.axeC = self.axeC % ( self.subplot_geo[0] * self.subplot_geo[1] )
     
-    def suptitle(self,*args):
+    def suptitle(self,*args,**kwargs):
         """ Set super title for the whole figure """
-        self.figH.suptitle(*args)
-    def plot(self,*args):
+        self.figH.suptitle(*args,**kwargs)
+    def plot(self,*args,**kwargs):
         """ Plot data """
         axeC = self.axis_current()
-        axeC.plot(*args)
+        axeC.plot(*args,**kwargs)
 #        axeC.set_xlim(np.min(x),np.max(x))
-    def pcolor(self,*args):
+    def pcolor(self,*args,**kwargs):
         """ 2D area plot """
         axeC = self.axis_current()
-        axeC.pcolormesh(*args,cmap='nipy_spectral')
-    def title(self,*args):
+        if 'cmap' not in kwargs:
+            kwargs['cmap'] = 'nipy_spectral'
+        axeC.pcolormesh(*args,**kwargs)
+    def title(self,*args,**kwargs):
         """ Set title for current axis """
         axeC = self.axis_current()
-        axeC.set_title(*args)
-    def xlabel(self,*args):
+        axeC.set_title(*args,**kwargs)
+    def xlabel(self,*args,**kwargs):
         """ Set xlabel for current axis """
         axeC = self.axis_current()
-        axeC.set_xlabel(*args)
-    def ylabel(self,*args):
+        axeC.set_xlabel(*args,**kwargs)
+    def ylabel(self,*args,**kwargs):
         """ Set ylabel for current axis """
         axeC = self.axis_current()
-        axeC.set_ylabel(*args)
+        axeC.set_ylabel(*args,**kwargs)
     def xlim(self,xmin=np.inf,xmax=-np.inf):
         """ Set limits for current x-axis: fig.xlim(0,1) or fig.xlim() """
         axeC = self.axis_current()
@@ -139,7 +141,7 @@ class classFig:
                 ymin = np.minimum(ymin,np.min(y))
                 ymax = np.maximum(ymax,np.max(y))
         axeC.set_ylim(ymin,ymax)
-    def save(self,filename,*args):
+    def save(self,filename,*args,**kwargs):
         """ Save figure to png, pdf: fig.save('test.png',600,'pdf') """
         dpi = 300
         fileparts = filename.split('.')
@@ -151,10 +153,12 @@ class classFig:
                 dpi = attribute
             else:
                 fileformat.add(attribute)
-                
+         
         self.figH.tight_layout()
+        if 'dpi' not in kwargs:
+            kwargs['dpi'] = dpi
         for iformat in fileformat:            
-            self.figH.savefig(filename+"."+iformat,dpi=dpi)
+            self.figH.savefig(filename+"."+iformat,**kwargs)
         if self.figshow==True:
             plt.show()
             
