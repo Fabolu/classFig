@@ -110,6 +110,13 @@ class classFig:
         if 'cmap' not in kwargs:
             kwargs['cmap'] = 'nipy_spectral'
         self.axeC.pcolormesh(*args,**kwargs)
+    def pcolor_square(self,*args,**kwargs):
+        """ 2D area plot with axis equal and off """
+        if 'cmap' not in kwargs:
+            kwargs['cmap'] = 'nipy_spectral'
+        self.axeC.pcolormesh(*args,**kwargs)
+        self.axeC.axis('off')
+        self.axeC.set_aspect('equal')
     def axis(self,*args,**kwargs):
         """ Access axis properties such as 'off' """
         self.axeC.axis(*args,**kwargs)
