@@ -181,5 +181,7 @@ if __name__ == '__main__':
     fig.subplot(4) # activate specific subplot
     fig.pcolor(np.random.rand(10,10)) # 2D data plot (uses much fast pcolormesh internally)
     fig.axeC.set_ylabel('Numbers') # all matplotlib functions can be called directly for the current axis
+    fig.subplot() # activate specific subplot
+    fig.pcolor_square(np.random.rand(10,10)) # 2D data plot with axis off and equal
     fig.save('fig_test.png',600,'pdf') # save figure in multiple format with specified resolution
     
