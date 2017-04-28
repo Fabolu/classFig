@@ -134,7 +134,10 @@ class classFig:
         self.axeC.set_ylabel(*args,**kwargs)
     def xlim(self,xmin=np.inf,xmax=-np.inf):
         """ Set limits for current x-axis: fig.xlim(0,1) or fig.xlim() """
-        if xmin==np.inf and xmax==-np.inf:
+        if np.size(xmin)==2:
+            xmax = xmin[1]
+            xmin = xmin[0]
+        elif xmin==np.inf and xmax==-np.inf:
             for iline in self.axeC.lines:
                 x = iline.get_xdata()
                 xmin = np.minimum(xmin,np.min(x))
@@ -142,7 +145,10 @@ class classFig:
         self.axeC.set_xlim(xmin,xmax)
     def ylim(self,ymin=np.inf,ymax=-np.inf):
         """ Set limits for current y-axis: fig.ylim(0,1) or fig.ylim() """
-        if ymin==np.inf and ymax==-np.inf:
+        if np.size(ymin)==2:
+            ymax = ymin[1]
+            ymin = ymin[0]
+        elif ymin==np.inf and ymax==-np.inf:
             for iline in self.axeC.lines:
                 y = iline.get_ydata()
                 ymin = np.minimum(ymin,np.min(y))
