@@ -8,14 +8,16 @@ from cycler import cycler # pip install cycler
 class classFig:
     """
     Class for comfortable figure handling with python / matplotlib   
-    @author: fstutzki
+    @author: Fabolu, fabolu@posteo.de
     """
-    def __init__(self, template='PPT', subplot=(1,1), sharex=False, sharey=False, width=0, height=0, fontfamily='', fontsize=0, linewidth=0, figshow=True):
+    def __init__(self, template='PPT', subplot=(1,1), sharex=False, sharey=False, width=0, height=0, fontfamily='', fontsize=0, linewidth=0, figshow=True, vspace=np.inf, hspace=np.inf):
         """ Set default values and create figure: fig = classFig('OL',(2,2)) """
         self.figshow = figshow # show figure after saving
         self.subplot_geo = subplot # subplot geometry, first value Y-axis (above), second value X-axis (besides)
         self.subplot_cnt = subplot[0]*subplot[1] # number of subplots
         self.axe_current = 0 # current axis
+        self.vspace = vspace
+        self.hspace = hspace
         
         # color
         colorBlue    = np.array([33,101,146])/255 #iap color "blue"
@@ -104,7 +106,6 @@ class classFig:
     def plot(self,*args,**kwargs):
         """ Plot data """
         self.axeC.plot(*args,**kwargs)
-#        axeC.set_xlim(np.min(x),np.max(x))
     def pcolor(self,*args,**kwargs):
         """ 2D area plot """
         if 'cmap' not in kwargs:
@@ -154,6 +155,16 @@ class classFig:
                 ymin = np.minimum(ymin,np.min(y))
                 ymax = np.maximum(ymax,np.max(y))
         self.axeC.set_ylim(ymin,ymax)
+    def set_parameters(self):
+        self.figH.tight_layout()
+
+        if self.hspace != np.inf and self.subplot_geo[0] > 1:
+            self.figH.subplots_adjust(hspace=self.hspace)
+        if self.vspace != np.inf and self.subplot_geo[1] > 1:
+            self.figH.subplots_adjust(vspace=self.vspace)
+    def show(self):
+        self.set_parameters()        
+        plt.show()
     def save(self,filename,*args,**kwargs):
         """ Save figure to png, pdf: fig.save('test.png',600,'pdf') """
         dpi = 300
@@ -166,11 +177,10 @@ class classFig:
                 dpi = attribute
             else:
                 fileformat.add(attribute)
-         
-        self.figH.tight_layout()
-        #fig.subplots_adjust(hspace=0.1)
         if 'dpi' not in kwargs:
             kwargs['dpi'] = dpi
+        
+        self.set_parameters()
         for iformat in fileformat:            
             self.figH.savefig(filename+"."+iformat,**kwargs)
         if self.figshow==True:
@@ -189,5 +199,5 @@ if __name__ == '__main__':
     fig.axeC.set_ylabel('Numbers') # all matplotlib functions can be called directly for the current axis
     fig.subplot() # activate specific subplot
     fig.pcolor_square(np.random.rand(10,10)) # 2D data plot with axis off and equal
-    fig.save('fig_test.png',600,'pdf') # save figure in multiple format with specified resolution
+    fig.save('classFig_test.png',600,'pdf') # save figure in multiple format with specified resolution
     
