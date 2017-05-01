@@ -1,0 +1,14 @@
+<html>
+<h1>classFig Documentation</h1>
+    <h2>Motivation</h2>
+    <p>Python 3 and matplotlib 2 offer a compelling feature set for scientific graphs and figures. However, sometimes the usage is quite complex. classFig provides a simplified access to often used functionality and, at the same time, can handle all matplotlib functions in a convenient and simplified way.</p>
+    <h2>Example</h2>
+    <p>from classFig.classFig import classFig # import classFig # pip install classFig</p>
+    <p>fig = classFig('PPT',(1,2)) # create figure with PPT template and 2 subplots
+    <p>fig.plot([1,2,3,1,2,3,4,1,1]) # plot first data set</p>
+    <p>fig.title('First data set') # set title for subplot</p>
+    <p>fig.subplot() # set focus to next subplot/axis</p>
+    <p>fig.plot([1,2,1]) # plot second data set</p>
+    <p>fig.xlabel('Data') # create xlabel for second axis</p>
+    <p>fig.save('test.png','pdf') # save figure to png and pdf</p>
+</html>
