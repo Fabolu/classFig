@@ -14,7 +14,6 @@ class classFig:
         """ Set default values and create figure: fig = classFig('OL',(2,2)) """
         self.figshow = figshow # show figure after saving
         self.subplot_geo = subplot # subplot geometry, first value Y-axis (above), second value X-axis (besides)
-        self.subplot_cnt = subplot[0]*subplot[1] # number of subplots
         self.axe_current = 0 # current axis
         self.vspace = vspace
         self.hspace = hspace
@@ -155,7 +154,7 @@ class classFig:
                 ymin = np.minimum(ymin,np.min(y))
                 ymax = np.maximum(ymax,np.max(y))
         self.axeC.set_ylim(ymin,ymax)
-    def set_parameters(self):
+    def set_parameters(self, hspace=np.inf, vspace=np.nf):
         self.figH.tight_layout()
 
         if self.hspace != np.inf and self.subplot_geo[0] > 1:
