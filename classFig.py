@@ -79,6 +79,92 @@ class classFig:
         self.figH.set_size_inches(width/2.54,height/2.54)
         
         self.subplot(0)
+
+    def Unit(self, val=0, unit='', precision=3):
+        separator = ''
+        if ' ' in unit:
+            separator = ' '
+            unit = unit.replace(" ", "")
+        elif '_' in unit:
+            separator = '_'
+            unit = unit.replace("_", "")
+
+        if '!' in unit:
+            filecompatible = 1;
+            unit = unit.replace("!", "")
+        else:
+            filecompatible = 0;
+
+        if type(precision) not in [float, int]:
+            with np.errstate(divide='ignore', invalid='ignore'):
+                exponent = np.floor(np.log10(np.min(np.abs(np.diff(precision)))))
+        else:
+            with np.errstate(divide='ignore', invalid='ignore'):
+                exponent = np.floor(np.log10(val))
+
+        prefix = ''
+        mult = 0
+        if unit == 'dB':
+            string = ("{0:." + str(precision) + "g}").format(10 * np.log10(val)) + separator + unit
+        elif unit == '%':
+            string = ("{0:." + str(precision) + "g}").format(100 * val) + separator + unit
+        else:
+
+            # exponent = floor(log10(val));
+            # error: calculation leads to 1e+3 µW instead of 1mW for 9.999e-4 input
+            # error: Calculation gives infinity for 0W
+
+            if (exponent <= -19):
+                prefix = ''
+                mult = 0
+            elif (exponent <= -16):
+                prefix = 'a'
+                mult = -18
+            elif (exponent <= -13):
+                prefix = 'f'
+                mult = -15
+            elif (exponent <= -10):
+                prefix = 'p'
+                mult = -12
+            elif (exponent <= -7):
+                prefix = 'n'
+                mult = -9
+            elif (exponent <= -4):
+                prefix = 'µ'
+                mult = -6
+            elif (exponent <= -1):
+                prefix = 'm'
+                mult = -3
+            elif (exponent <= 2):
+                prefix = ''
+                mult = 0
+            elif (exponent <= 5):
+                prefix = 'k'
+                mult = 3
+            elif (exponent <= 8):
+                prefix = 'M'
+                mult = 6
+            elif (exponent <= 11):
+                prefix = 'G'
+                mult = 9
+            elif (exponent <= 14):
+                prefix = 'T'
+                mult = 12
+            elif (exponent <= 17):
+                prefix = 'P'
+                mult = 15
+
+            string = ("{0:." + str(precision) + "g}").format(val * 10 ** (-mult)) + separator + prefix + unit
+
+        if filecompatible == 1:
+            string = string.replace("µ", "u")
+            string = string.replace(".", "p")
+            string = string.replace("/", "p")
+            string = string.replace(" ", "_")
+        return string, mult, prefix
+
+    def unit(self, *args, **kwargs):
+        return self.Unit(*args, **kwargs)[0]
             
     def subplot(self,iplot=np.NaN):
         """ Set current axis/subplot: fig.subplot(0) for first subplot or fig.subplot() for next subplot """
@@ -154,7 +240,7 @@ class classFig:
                 ymin = np.minimum(ymin,np.min(y))
                 ymax = np.maximum(ymax,np.max(y))
         self.axeC.set_ylim(ymin,ymax)
-    def set_parameters(self, hspace=np.inf, vspace=np.nf):
+    def set_parameters(self, hspace=np.inf, vspace=np.inf):
         self.figH.tight_layout()
 
         if self.hspace != np.inf and self.subplot_geo[0] > 1:
