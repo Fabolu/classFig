@@ -19,10 +19,10 @@ class classFig:
         self.hspace = hspace
         
         # color
-        colorBlue    = np.array([33,101,146])/255 #iap color "blue"
-        colorRed     = np.array([218,4,19])/255   #iap color "red"
-        colorGreen   = np.array([70,173,52])/255  #iap color "green"
-        colorOrange  = np.array([235,149,0])/255  #iap color "orange"
+        self.colorBlue    = np.array([33,101,146])/255 #iap color "blue"
+        self.colorRed     = np.array([218,4,19])/255   #iap color "red"
+        self.colorGreen   = np.array([70,173,52])/255  #iap color "green"
+        self.colorOrange  = np.array([235,149,0])/255  #iap color "orange"
 #        colorYellow  = np.array([255,242,0])/255  #iap color "yellow"
 #        colorGrey    = np.array([64,64,64])/255   #iap color "black"
         
@@ -71,7 +71,7 @@ class classFig:
         mpl.rc('font',size=fontsize)
         mpl.rc('font',family=fontfamily)
         mpl.rc('lines',linewidth=linewidth)
-        mpl.rc('axes', prop_cycle=(cycler('color', [colorBlue,colorRed,colorGreen,colorOrange,colorBlue,colorRed,colorGreen,colorOrange,colorBlue,colorRed,colorGreen,colorOrange,colorBlue,colorRed,colorGreen,colorOrange])+
+        mpl.rc('axes', prop_cycle=(cycler('color', [self.colorBlue,self.colorRed,self.colorGreen,self.colorOrange,self.colorBlue,self.colorRed,self.colorGreen,self.colorOrange,self.colorBlue,self.colorRed,self.colorGreen,self.colorOrange,self.colorBlue,self.colorRed,self.colorGreen,self.colorOrange])+
                                    cycler('linestyle', ['-','-','-','-','--','--','--','--',':',':',':',':','-.','-.','-.','-.'])))
         
         self.figH, self.axeH = plt.subplots(self.subplot_geo[0],self.subplot_geo[1],sharex=sharex,sharey=sharey)
@@ -240,6 +240,13 @@ class classFig:
                 ymin = np.minimum(ymin,np.min(y))
                 ymax = np.maximum(ymax,np.max(y))
         self.axeC.set_ylim(ymin,ymax)
+    def legend(self,labels='',*args,**kwargs):
+        if labels != '':
+            ilabel = 0
+            for iline in self.axeC.lines:
+                iline.set_label(labels[ilabel])
+                ilabel += 1
+        self.axeC.legend(*args,**kwargs)
     def set_parameters(self, hspace=np.inf, vspace=np.inf):
         self.figH.tight_layout()
 
